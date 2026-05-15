@@ -1,5 +1,5 @@
 let tasks = [];
-const completedTaskCount = 0;
+let completedTaskCount = 0;
 
 class InvalidIndexError extends Error {
   constructor(message = "Введён некорректный индекс") {
@@ -13,6 +13,7 @@ const setTask = function (title, description = null) {
     console.log("Нельзя добавить пустую задачу");
     return;
   }
+
   const task = {
     title: title,
     description: description,
@@ -23,11 +24,12 @@ const setTask = function (title, description = null) {
   tasks.push(task);
 };
 
-const showTask = function () {
+const showTasks = function () {
   if (!tasks.length) {
     console.log("Список задач пуст");
     return;
   }
+
   tasks.forEach(
     (
       { title, description, isCompleted, createdDate, completedDate },
@@ -67,8 +69,10 @@ const deleteTask = function (index) {
     if (!currTask) {
       throw new InvalidIndexError();
     }
+
     if (!currTask.isCompleted) {
       const isConfirmed = confirm("Таска еще не выполнена, удалить?");
+
       if (!isConfirmed) {
         console.log("Удаление отменено");
         return;
@@ -81,7 +85,7 @@ const deleteTask = function (index) {
 };
 
 const clearTasks = function () {
-  arr.length = 0;
+  tasks.length = 0;
 };
 
 const getTaskDescriptions = function () {
@@ -89,7 +93,8 @@ const getTaskDescriptions = function () {
     console.log("Список задач пуст");
     return;
   }
-  return tasks.map((task) => task.description);
+
+  return tasks.map(({ description }) => description);
 };
 
 const getLongTasks = function () {
@@ -97,8 +102,9 @@ const getLongTasks = function () {
     console.log("Список задач пуст");
     return;
   }
+
   return tasks.filter(
-    (task) => task.title.length > 10 || task.description.length > 10
+    (task) => task.title.length > 10 || (task.description?.length ?? 0) > 10
   );
 };
 
@@ -107,6 +113,7 @@ const getTasksByDateRange = function (startDate, endDate, isCompleted = false) {
     console.log("Список задач пуст");
     return;
   }
+
   const start = new Date(startDate).getTime();
   const end = new Date(endDate).getTime();
 
@@ -122,6 +129,7 @@ const getTasksByDateRange = function (startDate, endDate, isCompleted = false) {
   if (isCompleted) {
     return filteredTasks.filter((task) => task.isCompleted);
   }
+
   return filteredTasks;
 };
 
@@ -130,13 +138,13 @@ const clearShortTasks = function () {
     console.log("Список задач пуст");
     return;
   }
+
   tasks = tasks.filter((task) => task.title.length >= 5);
 };
 
 const setTitle = function (index, newTitle) {
   try {
     const currTask = tasks[index];
-
     if (!currTask) {
       throw new InvalidIndexError();
     }
@@ -147,4 +155,4 @@ const setTitle = function (index, newTitle) {
   }
 };
 
-console.log(getTasksByDateRange("2026-05-12", "2026-05-30"))
+console.log(getTasksByDateRange("2026-05-12", "2026-05-30"));
